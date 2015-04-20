@@ -118,6 +118,8 @@ class vector(object):
 		if type(self) == type(other) and self.__len__() == other.__len__():
 			return reduce(lambda x, y: x and y, \
 				map(lambda x, y: x==y, self.data, other.data))
+		else:
+			return False
 
 	def __ne__(self, other):
 		return not self.__eq__(other)

@@ -31,5 +31,6 @@ c = vector([0, 0, 0])
 d = vector([])
 # Comparisons and boolean outputs
 print bool(c), bool(d)		# Calls nonzero, False for 0D and 0 mag vectors
+print bool(a)
 print a > b					# Calls gt. Only mag compared. Others similar.
 print a == b				# Calls eq. True only if all coeffs are same
