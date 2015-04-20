@@ -51,7 +51,12 @@ class vector(object):
 
 	def __pos__(self):
 		return self
+	# Normalization of a vector
 	
+	#def __norm__(self):
+	#	return self / abs(self)
+		
+		
 	# Binary Operators
 	def __add__(self, other):
 		if type(other) == type(self):
