@@ -51,11 +51,6 @@ class vector(object):
 
 	def __pos__(self):
 		return self
-	# Normalization of a vector
-	
-	#def __norm__(self):
-	#	return self / abs(self)
-		
 		
 	# Binary Operators
 	def __add__(self, other):
@@ -128,3 +123,9 @@ class vector(object):
 
 	def __ne__(self, other):
 		return not self.__eq__(other)
+
+	# Non native methods
+	
+	def norm(self):
+		return self / abs(self)
+		
