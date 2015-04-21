@@ -128,4 +128,13 @@ class vector(object):
 	
 	def norm(self):
 		return self / abs(self)
-		
+	
+	# Numpy methods
+	
+	def tonumpy(self, dtype):
+		import numpy as np
+		if dtype=='float32' or dtype=='float64' or dtype=='float_':
+			return getattr(np, dtype)(self.data)
+		else:
+			raise TypeError('Dtype can be of float32, float64 or float_')
+
