@@ -36,4 +36,5 @@ print a > b					# Calls gt. Only mag compared. Others similar.
 print a == b				# Calls eq. True only if all coeffs are same
 
 x = a.tonumpy('float32')
-print vector(x)
+print x	            		# x is a numpy object
+print vector(x)	            # You can use numpy 1D arrays to construct a vector
