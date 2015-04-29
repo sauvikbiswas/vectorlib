@@ -7,6 +7,7 @@ a = vector([2, 4, 7])		# Data stored as float
 # Sequence operations
 print len(a)				# Should give the vector dim	
 print a[2]					# Should give us the 3rd coeff
+print list(a)				# Uses the iterator generator
 
 # Unary operations
 print a						# Calls repr
