@@ -1,7 +1,15 @@
 from __init__ import vector
 import unittest
 
-a = vector([2, 4, 7])		# Data stored as float
+a = vector([2, 4, 7])
+b = vector([3, 4, 0])
+c = vector([0, 0, 0])
+d = vector([])
+e = vector([1, 2, 3, 4, 5])
+i = vector([1, 0, 0])
+j = vector([0, 1, 0])
+k = vector([0, 0, 1])
+
 
 # Sequence operations
 class TestSequence(unittest.TestCase):
@@ -10,6 +18,12 @@ class TestSequence(unittest.TestCase):
 
 	def test_getitem(self):
 		self.assertEqual(a[2], 7.0)
+
+	def test_getitem_error(self):
+		with self.assertRaises(TypeError):
+			a['i']
+		with self.assertRaises(IndexError):
+			a[4]
 
 	def test_iterator(self):
 		self.assertEqual(list(a), [2.0, 4.0, 7.0])
@@ -30,34 +44,85 @@ class TestUnary(unittest.TestCase):
 		self.assertEqual(+a, a)
 		self.assertEqual(-(-a), a)
 
-suite = unittest.TestLoader().loadTestsFromTestCase(TestSequence)
-unittest.TextTestRunner(verbosity=2).run(suite)
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestUnary)
-unittest.TextTestRunner(verbosity=2).run(suite)
-
-#------------------------------ Will convert this in next commit.
-#------------------------------ Exception handling needs to be unittested.
-
-b = vector([3, 4, 0])
-
 # Binary operations
-print b + a					# Calls add
-print b - a					# Calls sub
-print a * b					# Calls mul, computes a dot product
-print a * 0.9				# Calls mul, scales the vetor
-print 0.9 * a				# Calls rmul to override the float's mul def
-print a / 0.9				# Calls div
-print a % b					# Calls mod, computes a cross product
+class TestBinary(unittest.TestCase):
+	def test_addsub(self):
+		self.assertEqual(b+a, vector([5, 8, 7]))
+		self.assertEqual(b-a, vector([1, 0, -7]))
+	
+	def test_addsub_error(self):
+		with self.assertRaises(TypeError):
+			a+d
+			a+e
 
-c = vector([0, 0, 0])
-d = vector([])
+	def test_muldiv(self):
+		self.assertEqual(a*b, 22.0)
+		self.assertEqual(a*0.9, vector([1.8, 3.6, 6.3]))
+		self.assertEqual(0.9*a, vector([1.8, 3.6, 6.3]))
+		self.assertEqual(a/2, vector([1, 2, 3.5]))
+
+	def test_muldiv_error(self):
+		with self.assertRaises(TypeError):
+			a*'a'
+			a*self
+		with self.assertRaises(TypeError):
+			a/'a'
+
+	def test_crossprod(self):
+		self.assertEqual(i%j, k)
+		self.assertEqual(j%k, i)
+		self.assertEqual(k%i, j)
+		self.assertEqual(j%i, -k)
+		self.assertEqual(k%j, -i)
+		self.assertEqual(i%k, -j)
+
+	def test_crossprod_error(self):
+		with self.assertRaises(ValueError):
+			a % d
+			a % e
+
 # Comparisons and boolean outputs
-print bool(c), bool(d)		# Calls nonzero, False for 0D and 0 mag vectors
-print bool(a)
-print a > b					# Calls gt. Only mag compared. Others similar.
-print a == b				# Calls eq. True only if all coeffs are same
+class TestBoolean(unittest.TestCase):
+	def test_bool(self):
+		self.assertFalse(c)
+		self.assertFalse(d)
+		self.assertTrue(a)
 
-x = a.tonumpy('float32')
-print x	            		# x is a numpy object
-print vector(x)	            # You can use numpy 1D arrays to construct a vector
+	def test_comparison(self):
+		self.assertFalse(a==b)
+		self.assertTrue(a!=b)
+		self.assertTrue(a>b)
+		self.assertFalse(a<b)
+		self.assertTrue(b<=a)
+		self.assertFalse(b>=a)
+		self.assertTrue(not d)
+		self.assertFalse(not a)
+
+class TestNumPy(unittest.TestCase):
+	def test_tonumpy(self):
+		import numpy as np
+		self.assertEqual(vector(a.tonumpy('float64')\
+			- np.float64([2.0, 4.0, 7.0])), c)
+
+	def test_tonumpy_error(self):
+		with self.assertRaises(TypeError):
+			a.tonumpy('random_dtype')
+
+class TestNonNative(unittest.TestCase):
+	def test_norm(self):
+		self.assertEqual((3*i).norm(), i)
+		self.assertEqual(abs(a.norm()), 1.0)
+		self.assertEqual(a.norm().norm(), a.norm())
+
+#--------------------------------------------------------------------------
+# All test suits are called here
+#--------------------------------------------------------------------------
+suitefn = unittest.TestLoader().loadTestsFromTestCase
+runfn = unittest.TextTestRunner(verbosity=2).run
+
+runfn(suitefn(TestSequence))
+runfn(suitefn(TestUnary))
+runfn(suitefn(TestBinary))
+runfn(suitefn(TestBoolean))
+runfn(suitefn(TestNumPy))
+runfn(suitefn(TestNonNative))

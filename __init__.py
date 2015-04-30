@@ -37,7 +37,7 @@ can handle vectors of n dimensions (except for cross product)."""
 		except TypeError:
 			raise TypeError('Index keys can only be of type \'int\'')
 		except IndexError:
-			IndexError('Index out of vector dimension')
+			raise IndexError('Index out of vector dimension')
 	
 	def __len__(self):
 		"""len(vectorobj) returns the dimension of the vector"""
@@ -94,13 +94,13 @@ can handle vectors of n dimensions (except for cross product)."""
 		"""vectorobj * vectorobj returns their dot product (float).
 vecorobj * float(obj) returns a scaled vector object otherwise"""
 		try:
-			val = float(other)
-			return vector([val*x for x in self.data])
-		except ValueError:
 			if type(self) == type(other):
 				return reduce(lambda x, y: x+y, \
 						map(lambda x, y: x*y, self.data, other.data))
 			else:
+				val = float(other)
+				return vector([val*x for x in self.data])
+		except (TypeError, ValueError):
 				raise TypeError('The data types cannot be multiplied')
 
 	def __rmul__(self, other):
@@ -114,7 +114,7 @@ of the vectors must be 3"""
 				and other.__len__() == 3:
 			u1, u2, u3 = self.data
 			v1, v2, v3 = other.data
-			return vector([(u2*v3 - u3*v3), (u3*v1 - u1*v3), \
+			return vector([(u2*v3 - u3*v2), (u3*v1 - u1*v3), \
 					(u1*v2 - u2*v1)])
 		else:
 			raise ValueError('Cross product is defined for vectors of \
