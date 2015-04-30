@@ -1,6 +1,11 @@
 __author__ = 'Sauvik Biswas'
-__version__ = '1.0.0-dev'
+__revision__  = '1'
+__rel_status__ = 'dev'
+__version__ = '1.0.%s-%s' % (__revision__, __rel_status__)
 __licence__ = 'MIT'
+__email__   = 'sauvik.biswas@gmail.com'
+__desc__    = 'Vector operations in nD space but primarily for usage in \
+				3D space.'
 
 class vector(object):
 	"""Vector objects are essentially 1D arrays. Most native operations on
