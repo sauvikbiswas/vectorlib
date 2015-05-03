@@ -10,6 +10,13 @@ i = vector([1, 0, 0])
 j = vector([0, 1, 0])
 k = vector([0, 0, 1])
 
+# Constructor errors
+class TestConstructor(unittest.TestCase):
+	def test_constuctor_error(self):
+		with self.assertRaises(TypeError):
+			vector([[2, 3], [4, 5, 6]])	
+		with self.assertRaises(ValueError):
+			vector(['a','v','b'])	
 
 # Sequence operations
 class TestSequence(unittest.TestCase):
@@ -120,6 +127,7 @@ class TestNonNative(unittest.TestCase):
 suitefn = unittest.TestLoader().loadTestsFromTestCase
 runfn = unittest.TextTestRunner(verbosity=2).run
 
+runfn(suitefn(TestConstructor))
 runfn(suitefn(TestSequence))
 runfn(suitefn(TestUnary))
 runfn(suitefn(TestBinary))

@@ -14,6 +14,7 @@ can handle vectors of n dimensions (except for cross product)."""
 
 	# Data containers
 	__name__ = 'vector'
+	data = []
 
 	# Constructor & Destructor
 	def __init__(self, listarr):
@@ -22,12 +23,8 @@ can handle vectors of n dimensions (except for cross product)."""
 			return
 		except ValueError:
 			raise ValueError('Cannot obtain a float representation')
-
-	def __del__(self):
-		try:
-			del(self.data)
-		except NameError:
-			raise NameError('Data not defined in this vector object')
+		except TypeError:
+			raise TypeError('Only 1D sequences can be vectorised')
 
 	# Sequence Operators
 	def __getitem__(self, key):
