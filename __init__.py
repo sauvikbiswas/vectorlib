@@ -8,4 +8,4 @@ __desc__    = 'Vector operations in nD space but primarily for usage in \
 				3D space.'
 
 from vector import vector
-from quarternion import Q
+from quaternion import Q

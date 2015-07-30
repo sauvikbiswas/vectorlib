@@ -101,6 +101,11 @@ class TestBoolean(unittest.TestCase):
 		self.assertTrue(not d)
 		self.assertFalse(not a)
 
+# We do not have adequate test data to test if Q -> rot and rot -> Q works
+# class TestNumPy(unittest.TestCase):
+#	def test_tonumpy(self):
+#		self.assertEqual(Q(a.tonumpy()), a)
+
 class TestNonNative(unittest.TestCase):
 	def test_norm(self):
 		self.assertEqual((3*i).norm(), i)
@@ -128,4 +133,5 @@ runfn(suitefn(TestSequence))
 runfn(suitefn(TestUnary))
 runfn(suitefn(TestBinary))
 runfn(suitefn(TestBoolean))
+# runfn(suitefn(TestNumPy))
 runfn(suitefn(TestNonNative))

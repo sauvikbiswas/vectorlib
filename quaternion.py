@@ -4,10 +4,55 @@ class Q(vector):
 complex plane. They are special forms of vectors and are used in 
 transformation"""
 
+	def __rotation_matrix_to_Qvect__(self, rotmat):
+		# There maybe a cleverer way to compute the Qvecs
+		# This one is basic textbook method
+		import math
+		
+		r11 = rotmat[0][0]
+		r22 = rotmat[1][1]
+		r33 = rotmat[2][2]
+
+		r12 = rotmat[0][1]	
+		r21 = rotmat[1][0]	
+		
+		r13 = rotmat[0][2]	
+		r31 = rotmat[2][0]	
+		
+		r23 = rotmat[1][2]	
+		r32 = rotmat[2][1]
+
+		d = 1.0
+		qvect = [0.0, 0.0, 0.0, 0.0]	
+		
+		if r22 > -r33 and r11 > -r22 and r11 > -r33:
+			d = math.sqrt(1.0+r11+r22+r33)
+			qvect = [d*d, r23-r32, r31-r13, r12-r21]
+		elif r22 < -r33 and r11 > r22 and r11 > r33:
+			d = math.sqrt(1.0+r11-r22-r33)
+			qvect = [r23-r32, d*d, r12+r21, r13+r31]
+		elif r22 > r33 and r11 < r22 and r11 < -r33:
+			d = math.sqrt(1.0-r11+r22-r33)
+			qvect = [r31-r13, r12+r21, d*d, r23+r32]
+		elif r22 < r33 and r11 < -r22 and r11 < r33:
+			d = math.sqrt(1.0-r11-r22+r33)
+			qvect = [r12-r21, r31+r13, r23+r32, d*d]
+
+		self.data = map(lambda x: x*d/2.0, qvect)
+		return
+			
+
 	# Constructor
 	def __init__(self, listarr):
+		import numpy as np
 		try:
-			if len(listarr) == 0:
+			if type(listarr) == type(np.matrix([])) or \
+					type(listarr) == type(np.array([])):
+				rotmat = np.array(listarr)
+				if rotmat.shape != (3, 3):
+					raise IndexError('Rotation matrix must be 3x3 in size.')
+				self.__rotation_matrix_to_Qvect__(rotmat)
+			elif len(listarr) == 0:
 				self.data = [0.0, 0.0, 0.0, 0.0]
 			elif len(listarr) == 3:
 				self.data = map(float, [0] + listarr)
@@ -73,4 +118,11 @@ transformation"""
 
 	# No numpy port without vectorising
 	def tonumpy(self):
-		return NotImplemented
+		"""Returns the rotation matrix as numpy.array after norm"""
+		import numpy as np
+		qnorm = self.norm()
+		q0, q1, q2, q3 = qnorm
+		rotmat=[[q0*q0+q1*q1-q2*q2-q3*q3, 2*q1*q2-2*q0*q3, 2*q1*q3-2*q0*q2],
+				[2*q1*q2-2*q0*q3, q0*q0-q1*q1+q2*q2-q3*q3, 2*q2*q3+2*q0*q1],
+				[2*q1*q3+2*q0*q2, 2*q2*q3-2*q0*q1, q0*q0-q1*q1-q2*q2+q3*q3]]
+		return np.array(rotmat)
