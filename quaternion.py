@@ -1,7 +1,7 @@
 from vector import vector
 class Q(vector):
-	"""Quarternions are special kind of vectors. They are 4D arrays in
-complex plane. They are special forms of vectors and are used in 
+	"""Quarternions are special kind of tuples. They are 4D arrays in
+complex plane. They are different from vectors and are used in 
 transformation"""
 
 	def __rotation_matrix_to_Qvect__(self, rotmat):
